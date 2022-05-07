@@ -1,0 +1,26 @@
+server:
+  port: 7777
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8888/eureka
+
+#localhost:7777/service-formation/formations/1
+#localhost:7777/service-formation/api/formation
+spring:
+  application:
+    name: ms-gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: route1
+          predicates:
+            - Path= /service-formation/**
+          filters:
+            - RewritePath= /service-formation/(?<s>.*), /${s}
+          uri: lb://ms-formation
+          # http://localhost:8081/ cas statique
